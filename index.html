@@ -5,44 +5,150 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Casino Bonuses</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 16px; }
-    .wrap { overflow-x: auto; }
-    table { border-collapse: collapse; width: 100%; min-width: 480px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
-    th { background: #f2f2f2; }
-    .muted { color: #777; }
-    #updated { font-size: 0.85em; color: #555; }
+    :root {
+      --purple-dark: #1a0b2e;
+      --purple: #5b21b6;
+      --purple-light: #8b5cf6;
+      --gold: #f5b83d;
+      --orange: #ff8a1f;
+      --white: #ffffff;
+      --text: #2a1b45;
+      --muted: #8a7da3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #3b1a6b 0%, var(--purple-dark) 60%);
+      background-attachment: fixed;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px 16px 40px; }
+    header { text-align: center; color: var(--white); margin-bottom: 24px; }
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--gold), var(--orange));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle { margin: 0; color: #d8ccf0; font-size: 0.95rem; }
+    #updated { margin-top: 8px; font-size: 0.8rem; color: #b9a8dc; }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(139, 92, 246, 0.35);
+      border-top: 4px solid var(--gold);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: linear-gradient(90deg, var(--purple), var(--purple-light));
+      color: var(--white);
+      text-align: left;
+      padding: 14px 16px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    td { padding: 14px 16px; border-bottom: 1px solid #efe9fa; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #faf7ff; }
+    td.casino { font-weight: 700; color: var(--purple); font-size: 1.05rem; }
+    td.bonus { font-weight: 600; }
+    td.muted { color: var(--muted); font-style: italic; }
+    a.source {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold), var(--orange));
+      color: var(--purple-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+    a.source:hover { filter: brightness(1.08); }
+
+    footer { margin-top: 20px; text-align: center; color: #b9a8dc; font-size: 0.78rem; }
+    #error { color: #ffd9a0; text-align: center; margin-top: 12px; }
+
+    @media (max-width: 640px) {
+      table, tbody, tr, td { display: block; width: 100%; }
+      thead { display: none; }
+      .card { background: transparent; box-shadow: none; border-top: none; }
+      tbody tr {
+        background: var(--white);
+        border-radius: 14px;
+        margin-bottom: 14px;
+        overflow: hidden;
+        border-top: 4px solid var(--gold);
+        box-shadow: 0 6px 24px rgba(139, 92, 246, 0.3);
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        text-align: right;
+        padding: 10px 14px;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--purple-light);
+        text-align: left;
+        flex-shrink: 0;
+      }
+      td.casino { background: #f5f0ff; font-size: 1.1rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>Casino welcome bonuses</h1>
-  <p id="updated"></p>
-  <div class="wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Casino</th>
-          <th>Welcome bonus</th>
-          <th>Wagering (x)</th>
-          <th>Min. deposit</th>
-          <th>Source</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
+  <div class="container">
+    <header>
+      <h1>Casino Welcome Bonuses</h1>
+      <p class="subtitle">South African online casinos, compared</p>
+      <p id="updated"></p>
+    </header>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Casino</th>
+            <th>Welcome bonus</th>
+            <th>Wagering (x)</th>
+            <th>Min. deposit</th>
+            <th>Source</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p id="error"></p>
+
+    <footer>18+ only. Please gamble responsibly. Data extracted automatically; check each casino's T&amp;Cs.</footer>
   </div>
 
   <script>
-    function cell(tr, value, fallback) {
+    function cell(tr, value, fallback, label, cls) {
       const td = document.createElement("td");
+      td.dataset.label = label;
       if (value === null || value === undefined) {
         td.textContent = fallback;
         td.className = "muted";
       } else {
         td.textContent = value;
+        if (cls) td.className = cls;
       }
       tr.appendChild(td);
-      return td;
     }
 
     fetch("data.json")
@@ -53,13 +159,17 @@
         const tbody = document.getElementById("rows");
         data.casinos.forEach(c => {
           const tr = document.createElement("tr");
-          cell(tr, c.casino, "-");
-          cell(tr, c.welcome_bonus, "-");
-          cell(tr, c.wagering_multiplier, "Not stated");
-          cell(tr, c.min_deposit, "Not stated");
+          cell(tr, c.casino, "-", "Casino", "casino");
+          cell(tr, c.welcome_bonus, "-", "Welcome bonus", "bonus");
+          cell(tr, c.wagering_multiplier, "Not stated", "Wagering (x)");
+          cell(tr, c.min_deposit, "Not stated", "Min. deposit");
           const td = document.createElement("td");
+          td.dataset.label = "Source";
           const a = document.createElement("a");
+          a.className = "source";
           a.href = c.source_url;
+          a.target = "_blank";
+          a.rel = "noopener";
           a.textContent = "Source";
           td.appendChild(a);
           tr.appendChild(td);
@@ -67,7 +177,7 @@
         });
       })
       .catch(() => {
-        document.getElementById("updated").textContent = "Could not load data.json";
+        document.getElementById("error").textContent = "Could not load data.json";
       });
   </script>
 </body>
