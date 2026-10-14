@@ -1,0 +1,26 @@
+{
+  "scraped_at": "2026-10-14T19:42:51.200532+00:00",
+  "casinos": [
+    {
+      "casino": "Easybet",
+      "welcome_bonus": "R50 Bonus + 25 Free Spins",
+      "wagering_multiplier": null,
+      "min_deposit": "R5",
+      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+    },
+    {
+      "casino": "Jackpot City",
+      "welcome_bonus": "Unlock Up to 350 Free Spins or R2000 Matched Bonus",
+      "wagering_multiplier": null,
+      "min_deposit": "R5",
+      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+    },
+    {
+      "casino": "Tic Tac",
+      "welcome_bonus": "100% Deposit Bonus + 50 Free Spins",
+      "wagering_multiplier": null,
+      "min_deposit": "R5",
+      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+    }
+  ]
+}
