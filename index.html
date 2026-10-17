@@ -159,22 +159,18 @@
         const tbody = document.getElementById("rows");
         data.casinos.forEach(c => {
           const tr = document.createElement("tr");
-          cell(tr, c.casino, "-", "Casino", "casino");
-          cell(tr, c.welcome_bonus, "-", "Welcome bonus", "bonus");
-          cell(tr, c.wagering_multiplier, "Not stated", "Wagering (x)");
-          cell(tr, c.min_deposit, "Not stated", "Min. deposit");
-          const td = document.createElement("td");
-          td.dataset.label = "Source";
-          const a = document.createElement("a");
-          a.className = "source";
-          a.href = c.source_url;
-          a.target = "_blank";
-          a.rel = "noopener";
-          a.textContent = "Source";
-          td.appendChild(a);
-          tr.appendChild(td);
-          tbody.appendChild(tr);
-        });
+            cell(tr, c.casino, "-", "Casino", "casino");
+          if (c.casino_url) {
+            const td0 = tr.lastChild;
+            const link = document.createElement("a");
+            link.href = c.casino_url;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = c.casino;
+            link.style.color = "inherit";
+            td0.textContent = "";
+            td0.appendChild(link);
+            }});
       })
       .catch(() => {
         document.getElementById("error").textContent = "Could not load data.json";

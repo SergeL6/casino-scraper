@@ -21,9 +21,12 @@ OUTPUT = "data.json"
 # alt_key: text found in the table row's image alt
 # block_key: name used in the "Features & Information" heading
 TARGETS = [
-    {"alt_key": "easybet", "block_key": "Easybet Casino", "name": "Easybet"},
-    {"alt_key": "jackpotcity", "block_key": "Jackpot City Casino", "name": "Jackpot City"},
-    {"alt_key": "tictacbet", "block_key": "Tic Tac Casino", "name": "Tic Tac"}
+    {"alt_key": "easybet", "block_key": "Easybet Casino", "name": "Easybet",
+     "url": "https://easybet.co.za/"},
+    {"alt_key": "jackpotcity", "block_key": "Jackpot City Casino", "name": "Jackpot City",
+     "url": "https://www.jackpotcity.co.za/"},
+    {"alt_key": "tictacbet", "block_key": "Tic Tac Casino", "name": "Tic Tac",
+     "url": "https://tictac-bets.co.za/"},
 ]
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY_1"))
@@ -92,17 +95,15 @@ def main():
         bonus = row.select_one('[data-testid="brand-bonus"]')
         if img and bonus:
             key = img.get("alt", "").lower().replace(" ", "").replace("-", "")
-            rows[key] = (img.get("alt", ""), bonus.get_text(" ", strip=True))
+            rows[key] = bonus.get_text(" ", strip=True)
 
     results = []
     for t in TARGETS:
-        match = next((v for k, v in rows.items() if t["alt_key"] in k), None)
-        if not match:
+        bonus_text = next((v for k, v in rows.items() if t["alt_key"] in k), None)
+        if not bonus_text:
             print(f"Row not found for {t['alt_key']}, skipping")
             continue
-        raw_name, bonus_text = match
 
-       
         m = re.search(
             re.escape(t["block_key"])
             + r"[^:]{0,5}: Features & Information(.*?)Withdrawal Speed",
@@ -114,6 +115,7 @@ def main():
             name=t["name"], bonus=bonus_text, features=features)))
         data["casino"] = t["name"]
         data["source_url"] = URL
+        data["casino_url"] = t["url"]
         results.append(data)
         print("OK:", data)
 

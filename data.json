@@ -1,26 +1,29 @@
 {
-  "scraped_at": "2026-10-17T17:22:48.374739+00:00",
+  "scraped_at": "2026-10-17T17:59:50.441686+00:00",
   "casinos": [
     {
       "casino": "Easybet",
       "welcome_bonus": "R50 Bonus + 25 Free Spins",
       "wagering_multiplier": null,
       "min_deposit": "R5",
-      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+      "source_url": "https://www.livescore.com/en-za/online-casinos/",
+      "casino_url": "https://easybet.co.za/"
     },
     {
       "casino": "Jackpot City",
       "welcome_bonus": "Unlock Up to 350 Free Spins or R2000 Matched Bonus",
       "wagering_multiplier": null,
       "min_deposit": "R5",
-      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+      "source_url": "https://www.livescore.com/en-za/online-casinos/",
+      "casino_url": "https://www.jackpotcity.co.za/"
     },
     {
       "casino": "Tic Tac",
       "welcome_bonus": "100% Deposit Bonus + 50 Free Spins",
       "wagering_multiplier": null,
       "min_deposit": "R5",
-      "source_url": "https://www.livescore.com/en-za/online-casinos/"
+      "source_url": "https://www.livescore.com/en-za/online-casinos/",
+      "casino_url": "https://tictac-bets.co.za/"
     }
   ]
 }
